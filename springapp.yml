@@ -1,41 +1,46 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: springapp
+  name: spring-deployment
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: springapp
+      app: spring-app
   template:
     metadata:
       labels:
-        app: springapp
+        app: spring-app
     spec:
       containers:
         - name: spring-container
-          image: 69966/springgradleimg:1.1.1
+          image: muyleangin/spring-sen:1.0
           ports:
             - containerPort: 8080
           volumeMounts:
-            - name: springapp-vol
+            - name: spring-volume
               mountPath: /app/src/main/resources/images
       volumes:
-        - name: springapp-vol
-          nfs:
+        - name: spring-volume
+          nfs: 
             server: 128.199.148.26
             path: /opt/nfs/data
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: springapp
+  name: spring-service
+  
 spec:
   selector:
-    app: springapp
+    app: spring-app
   ports:
-    - port: 8080
-      targetPort: 8080
+  - port: 8080
+    targetPort: 8080
+  type: ClusterIP
+
+---
+
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -58,6 +63,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: springapp
+                name: spring-service
                 port:
                   number: 8080
