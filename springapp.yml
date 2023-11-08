@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: springapp
-  labels:
-    app: springapp
 spec:
   replicas: 3
   selector:
@@ -19,7 +17,7 @@ spec:
           image: 69966/springgradleimg:1.1.1
           ports:
             - containerPort: 8080
-          volumeMoutns:
+          volumeMounts:
             - name: springapp-vol
               mountPath: /app/src/main/resources/images
       volumes:
@@ -33,12 +31,12 @@ kind: Service
 metadata:
   name: springapp
 spec:
-  type: ClusterIP
   selector:
     app: springapp
   ports:
     - port: 8080
       targetPort: 8080
+
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
